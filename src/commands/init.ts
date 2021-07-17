@@ -1,9 +1,11 @@
 import { Command, flags } from '@oclif/command';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as appRoot from 'app-root-path';
+import * as logSymbols from 'log-symbols';
+import cli from 'cli-ux';
 import { indexTemplate, UITemplate, queryTemplate, storiesTemplate, templateAPITypes } from '../utils/templates';
 import { Config, RelayConfig } from '../utils/types';
+import { isRunningInRoot } from '../utils';
 
 export default class Init extends Command {
   static description = 'sets up relay-butler by creating config.js, templates/*.hbs files, input.graphql in .relay-butler/ directory.';
@@ -17,18 +19,14 @@ export default class Init extends Command {
   };
 
   async run() {
-    const startedAt = new Date();
     const { flags } = this.parse(Init);
-    const root = appRoot.toString() ?? process.cwd();
-
-    // recursively create .relay-butler/templates directory in project root
+    if (!isRunningInRoot()) {
+      this.error('Cannot run relay-butler outside of project root (i.e. directory where package.json is located)');
+    }
+    const root = process.cwd();
     const relayButlerDir = path.resolve(root, './.relay-bulter');
-    const relayButlerTemplatesDir = path.resolve(relayButlerDir, './templates');
-    await fs.promises.mkdir(relayButlerTemplatesDir, {
-      recursive: true,
-    });
 
-    // read from relay.config.js
+    // get schemaPath from relay.config.js
     let relayConfig: RelayConfig | null = null;
     try {
       relayConfig = require(path.resolve(root, './relay.config.js'));
@@ -40,43 +38,64 @@ export default class Init extends Command {
       }
     }
 
-    // detect if .storybook exists and whether to create storybook template
-    let createStorybookTemplate = false;
-    const rootDirectories = await fs.promises.readdir(root);
-    if (rootDirectories.includes('.storybook')) {
-      createStorybookTemplate = true;
-    }
+    // recursively create .relay-butler/templates directory in project root
+    const relayButlerTemplatesDir = path.resolve(relayButlerDir, './templates');
+    cli.action.start('Creating .relay-bulter directory');
+    await fs.promises.mkdir(relayButlerTemplatesDir, {
+      recursive: true,
+    });
+    cli.action.stop(logSymbols.success);
 
-    // write .relay-butler/config.json
+    // write .relay-butler/config.js
     const configToWrite: Config = {
       componentsDirectory: './src/components',
       schema: relayConfig?.schema ?? 'ADD SCHEMA PATH HERE',
     };
+    cli.action.start('Creating config.js');
     await fs.promises.writeFile(path.resolve(relayButlerDir, './config.js'), `module.exports = ${JSON.stringify(configToWrite, null, 2)}`);
+    cli.action.stop(logSymbols.success);
 
     // create templateAPI.ts in .relay-butler/
+    cli.action.start('Creating templateAPI.ts');
     await fs.promises.writeFile(path.resolve(relayButlerDir, './templateAPI.ts'), templateAPITypes);
+    cli.action.stop(logSymbols.success);
 
     // create index template file
+    cli.action.start('Creating index component template file');
     await fs.promises.writeFile(path.resolve(relayButlerTemplatesDir, './index.tsx.hbs'), indexTemplate);
+    cli.action.stop(logSymbols.success);
 
     // create UI template file
+    cli.action.start('Creating UI component template file');
     await fs.promises.writeFile(path.resolve(relayButlerTemplatesDir, './{{componentName}}UI.tsx.hbs'), UITemplate);
+    cli.action.stop(logSymbols.success);
 
     // create query template file
+    cli.action.start('Creating query component template file');
     await fs.promises.writeFile(path.resolve(relayButlerTemplatesDir, './{{componentName}}Query.tsx.hbs'), queryTemplate);
+    cli.action.stop(logSymbols.success);
 
     // create stories template file if project uses storybook
+    let createStorybookTemplate = false;
+    const rootDirectories = await fs.promises.readdir(root);
+    if (rootDirectories.includes('.storybook')) {
+      createStorybookTemplate = true;
+      this.log('Detected Storybook! Will also create a .stories template.');
+    }
     if (createStorybookTemplate || flags.all) {
-      fs.promises.writeFile(path.resolve(relayButlerTemplatesDir, './{{componentName}}.stories.tsx.hbs'), storiesTemplate);
+      cli.action.start('Creating Storybook stories template file');
+      await fs.promises.writeFile(path.resolve(relayButlerTemplatesDir, './{{componentName}}.stories.tsx.hbs'), storiesTemplate);
+      cli.action.stop(logSymbols.success);
     }
 
     // .gitignore .relay-butler/input.graphql
+    cli.action.start('Adding input.graphql to .gitignore');
     await fs.promises.appendFile(path.resolve(root, './.gitignore'), '\n# relay-butler\n.relay-butler/input.graphql');
+    cli.action.stop(logSymbols.success);
 
     // create .relay-bulter/input.graphql
+    cli.action.start('Creating input.graphql file');
     await fs.promises.writeFile(path.resolve(relayButlerDir, './input.graphql'), '');
-
-    this.log(`✨  Done in ${(new Date().getTime() - startedAt.getTime()) / 1000}s.`);
+    cli.action.stop(logSymbols.success);
   }
 }
