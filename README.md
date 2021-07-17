@@ -19,7 +19,7 @@ $ npm install -g relay-butler
 $ relay-butler COMMAND
 running command...
 $ relay-butler (-v|--version|version)
-relay-butler/0.0.4 darwin-x64 node-v12.22.0
+relay-butler/0.0.5 darwin-x64 node-v12.22.0
 $ relay-butler --help [COMMAND]
 USAGE
   $ relay-butler COMMAND
@@ -61,5 +61,5 @@ OPTIONS
   -h, --help  show help for init command
 ```
 
-_See code: [src/commands/init.ts](https://github.com/richardguerre/relay-butler/blob/v0.0.4/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/richardguerre/relay-butler/blob/v0.0.5/src/commands/init.ts)_
 <!-- commandsstop -->
