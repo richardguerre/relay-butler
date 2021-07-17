@@ -10,8 +10,7 @@
     "composite": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitAny": true,
-    "baseUrl": "./src"
+    "noImplicitAny": true
   },
   "include": ["src/**/*"]
 }
