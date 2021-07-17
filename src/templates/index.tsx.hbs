@@ -1,0 +1,34 @@
+import React from 'react';
+import { graphql, useFragment } from 'react-relay';
+{{#each fragments}}
+import { {{this.name}}$key } from '__generated__/{{this.name}}.graphql';
+{{/each}}
+import {{componentName}}UI, { {{componentName}}Props, {{componentName}}Loader } from './{{componentName}}UI';
+
+type Props = {{componentName}}Props & {
+  {{#each fragments}}
+  {{this.propName}}: {{this.name}}$key;
+  {{/each}}
+};
+
+const {{componentName}}Container = (props: Props) => {
+  {{#each fragments}}
+  const {{this.propName}} = useFragment(
+    graphql`
+      {{this.raw}}
+    `,
+    props.{{this.propName}}
+  );
+  {{/each}}
+
+  return <{{componentName}}UI {...props} {{#each fragments}}{{this.propName}}={ {{this.propName}} }{{/each}} />;
+};
+
+const {{componentName}} = (props: Props) => (
+  <Suspense fallback={<{{componentName}}Loader />}>
+    <{{componentName}}Container {...props} />
+  </Suspense>
+)
+
+export default {{componentName}};
+export { {{componentName}}Container, {{componentName}}Loader, {{componentName}}Props };

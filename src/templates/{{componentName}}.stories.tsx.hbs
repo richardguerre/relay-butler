@@ -1,0 +1,42 @@
+import React from 'react';
+import { RelayEnvironmentProvider } from 'react-relay';
+import { Meta } from '@storybook/react';
+import { useRelayMockEnvironment } from 'path/to/useRelayMockEnvironment';
+import {{componentName}} from './{{componentName}}Query';
+
+export default {
+  title: '{{componentName}}',
+  component: {{componentName}},
+  excludeStories: ['{{componentName}}MockDefaultOverrides'],
+} as Meta;
+
+export const {{componentName}}MockDefaultOverrides = {
+  /**
+   * Add any mock default overrides here to be shared with stories of parent components.
+   * For example, a ListItem component might share its mock defaults with the List component stories.
+   */
+};
+
+export const Default = () => {
+  const environment = useRelayMockEnvironment({
+    data: {{componentName}}MockDefaultOverrides,
+  });
+
+  return (
+    <RelayMockEnvironment environment={environment}>
+      <{{componentName}} />
+    </RelayMockEnvironment>
+  );
+};
+
+export const Loading = () => {
+  const environment = useRelayMockEnvironment({
+    forceLoading: true,
+  });
+
+  return (
+    <RelayMockEnvironment environment={environment}>
+      <{{componentName}} />
+    </RelayMockEnvironment>
+  );
+};
