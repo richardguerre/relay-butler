@@ -97,5 +97,17 @@ export default class Init extends Command {
     cli.action.start('Creating input.graphql file');
     await fs.promises.writeFile(path.resolve(relayButlerDir, './input.graphql'), '');
     cli.action.stop(logSymbols.success);
+
+    this.log(`
+
+You can now check the .relay-butler directory, and make any changes you want. You can refer to templateAPI.ts to write your templates.
+
+  For example, you might want to:
+    - check that the schemaPath in config.js is correct.
+    - change the path to your import statements in the templates, such as the path to your Relay artifacts (i.e. .../__generated__/...).
+    - add/remove a template.
+    - change the file extensions to ts, js, or jsx.
+    - customize your templates any way you want.
+`);
   }
 }
