@@ -98,7 +98,7 @@ export default class Init extends Command {
     await fs.promises.writeFile(path.resolve(relayButlerDir, './input.graphql'), '');
     cli.action.stop(logSymbols.success);
 
-    this.log(`
+    this.log(`✨  Done
 
 You can now check the .relay-butler directory, and make any changes you want. You can refer to templateAPI.ts to write your templates.
 
