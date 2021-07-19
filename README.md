@@ -25,7 +25,9 @@ relay-butler init
 relay-butler generate
 ```
 
-### Tips
+## Tips
+
+### Add a script in package.json
 
 It is recommended to add a script in package.json, that runs `relay-butler generate` then `relay-compiler` and any other script (e.g. prettier)
 For example:
@@ -33,13 +35,24 @@ For example:
 ```json
 {
   "scripts": {
-    // ...
     "relay-butler": "relay-butler generate && relay-compiler && prettier --write src/components/"
   }
 }
 ```
 
 Then you can just run `npm run relay-butler` or `yarn relay-butler`.
+
+### Use Storybook with [`use-relay-mock-environment`](https://www.npmjs.com/package/use-relay-mock-environment)
+
+If you want to create stories out of your Relay components, we recommend using [`use-relay-mock-environment`](https://www.npmjs.com/package/use-relay-mock-environment).
+
+If you have set up Storybook before setting up relay-butler, `relay-butler init` will detect that and will automatically create a `.stories.tsx` template with . All you need to do is install `use-relay-mock-environment` and change the path to your `useRelayMockEnvironment` hook.
+
+You can manually create the relay-butler `.stories.tsx` template by running:
+
+```
+relay-butler init --storybook
+```
 
 ## Templates
 
@@ -51,14 +64,16 @@ Templates in `.relay-butler/templates/` use handlebars as the templating languag
 ## Table of Contents
 
 <!-- toc -->
-* [relay-butler](#relay-butler)
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [relay-butler](#relay-butler)
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
+
 ```sh-session
 $ npm install -g relay-butler
 $ relay-butler COMMAND
@@ -70,14 +85,16 @@ USAGE
   $ relay-butler COMMAND
 ...
 ```
+
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-* [`relay-butler generate`](#relay-butler-generate)
-* [`relay-butler help [COMMAND]`](#relay-butler-help-command)
-* [`relay-butler init`](#relay-butler-init)
+
+- [`relay-butler generate`](#relay-butler-generate)
+- [`relay-butler help [COMMAND]`](#relay-butler-help-command)
+- [`relay-butler init`](#relay-butler-init)
 
 ## `relay-butler generate`
 
@@ -112,7 +129,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2
 
 ## `relay-butler init`
 
-sets up relay-butler by creating config.js, templates/*.hbs files, input.graphql in .relay-butler/ directory.
+sets up relay-butler by creating config.js, templates/\*.hbs files, input.graphql in .relay-butler/ directory.
 
 ```
 USAGE
@@ -124,4 +141,5 @@ OPTIONS
 ```
 
 _See code: [src/commands/init.ts](https://github.com/richardguerre/relay-butler/blob/v1.0.1/src/commands/init.ts)_
+
 <!-- commandsstop -->

@@ -16,6 +16,9 @@ export default class Init extends Command {
       char: 'a',
       description: 'generate all template files',
     }),
+    storybook: flags.boolean({
+      description: 'generate storybook template',
+    }),
   };
 
   async run() {
@@ -25,6 +28,14 @@ export default class Init extends Command {
     }
     const root = process.cwd();
     const relayButlerDir = path.resolve(root, './.relay-butler');
+    const relayButlerTemplatesDir = path.resolve(relayButlerDir, './templates');
+
+    if (flags.storybook) {
+      cli.action.start('Creating Storybook stories template file');
+      await fs.promises.writeFile(path.resolve(relayButlerTemplatesDir, './{{componentName}}.stories.tsx.hbs'), storiesTemplate);
+      cli.action.stop(logSymbols.success);
+      return;
+    }
 
     // get schemaPath from relay.config.js
     let relayConfig: RelayConfig | null = null;
@@ -39,7 +50,6 @@ export default class Init extends Command {
     }
 
     // recursively create .relay-butler/templates directory in project root
-    const relayButlerTemplatesDir = path.resolve(relayButlerDir, './templates');
     cli.action.start('Creating .relay-butler directory');
     await fs.promises.mkdir(relayButlerTemplatesDir, {
       recursive: true,
