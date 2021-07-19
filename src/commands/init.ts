@@ -24,7 +24,7 @@ export default class Init extends Command {
       this.error('Cannot run relay-butler outside of project root (i.e. directory where package.json is located)');
     }
     const root = process.cwd();
-    const relayButlerDir = path.resolve(root, './.relay-bulter');
+    const relayButlerDir = path.resolve(root, './.relay-butler');
 
     // get schemaPath from relay.config.js
     let relayConfig: RelayConfig | null = null;
@@ -40,7 +40,7 @@ export default class Init extends Command {
 
     // recursively create .relay-butler/templates directory in project root
     const relayButlerTemplatesDir = path.resolve(relayButlerDir, './templates');
-    cli.action.start('Creating .relay-bulter directory');
+    cli.action.start('Creating .relay-butler directory');
     await fs.promises.mkdir(relayButlerTemplatesDir, {
       recursive: true,
     });
@@ -49,6 +49,7 @@ export default class Init extends Command {
     // write .relay-butler/config.js
     const configToWrite: Config = {
       componentsDirectory: './src/components',
+      nodeTypeName: 'Node',
       schema: relayConfig?.schema ?? 'ADD SCHEMA PATH HERE',
     };
     cli.action.start('Creating config.js');
@@ -93,21 +94,31 @@ export default class Init extends Command {
     await fs.promises.appendFile(path.resolve(root, './.gitignore'), '\n# relay-butler\n.relay-butler/input.graphql');
     cli.action.stop(logSymbols.success);
 
-    // create .relay-bulter/input.graphql
+    // create .relay-butler/input.graphql
     cli.action.start('Creating input.graphql file');
     await fs.promises.writeFile(path.resolve(relayButlerDir, './input.graphql'), '');
     cli.action.stop(logSymbols.success);
 
     this.log(`✨  Done
 
-You can now check the .relay-butler directory, and make any changes you want. You can refer to templateAPI.ts to write your templates.
+You can now check the .relay-butler directory, and make any changes you want.
 
-  For example, you might want to:
+  For example, you may want to:
     - check that the schemaPath in config.js is correct.
     - change the path to your import statements in the templates, such as the path to your Relay artifacts (i.e. .../__generated__/...).
     - add/remove a template.
     - change the file extensions to ts, js, or jsx.
-    - customize your templates any way you want.
+    - customize your templates any way you want. You can refer to templateAPI.ts to write your templates.
+
+You can then input GraphQL fragments in .relay-butler/input.graphql and run \`relay-butler generate\` to generate your components.
+
+${logSymbols.info} TIP: It is recommended to add a script in package.json, that runs \`relay-butler generate\` then \`relay-compiler\` and any other script (e.g. prettier)
+For example:
+  "scripts": {
+    ...
+    "relay-butler": "relay-butler generate && relay-compiler && prettier --write src/components/"
+  }
+Then you can just run \`npm run relay-butler\` or \`yarn relay-butler\`.
 `);
   }
 }

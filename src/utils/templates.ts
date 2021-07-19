@@ -1,4 +1,4 @@
-export const indexTemplate = `import React from 'react';
+export const indexTemplate = `import React, { Suspense } from 'react';
 import { graphql, useFragment } from 'react-relay';
 {{#each fragments}}
 import { {{this.name}}$key } from '__generated__/{{this.name}}.graphql';
@@ -31,7 +31,8 @@ const {{componentName}} = (props: Props) => (
 )
 
 export default {{componentName}};
-export { {{componentName}}Container, {{componentName}}Loader, {{componentName}}Props };
+export { {{componentName}}Container, {{componentName}}Loader };
+export type { {{componentName}}Props };
 `;
 
 export const UITemplate = `import React from 'react';
@@ -90,7 +91,7 @@ import { {{componentName}}Query as {{componentName}}QueryType } from '__generate
 import {{componentName}}, { {{componentName}}Loader } from '.';
 
 const query = graphql\`
-  {{query.raw}}
+  {{{query.raw}}}
 \`;
 
 type QueryProps = {
@@ -100,7 +101,7 @@ type QueryProps = {
 export const {{componentName}}Query = (props: QueryProps) => {
   const data = usePreloadedQuery(query, props.queryRef);
 
-  if({{#each query.fragments}}!data.{{this.dataPath}} ||{{/each}}) {
+  if({{#each query.fragments}}!data.{{this.dataPath}} {{#unless @last}}||{{/unless}}{{/each}}) {
     return null;
   }
 
@@ -159,9 +160,9 @@ export const Default = () => {
   });
 
   return (
-    <RelayMockEnvironment environment={environment}>
+    <RelayEnvironmentProvider environment={environment}>
       <{{componentName}} />
-    </RelayMockEnvironment>
+    </RelayEnvironmentProvider>
   );
 };
 
@@ -171,9 +172,9 @@ export const Loading = () => {
   });
 
   return (
-    <RelayMockEnvironment environment={environment}>
+    <RelayEnvironmentProvider environment={environment}>
       <{{componentName}} />
-    </RelayMockEnvironment>
+    </RelayEnvironmentProvider>
   );
 };
 `;
@@ -184,23 +185,23 @@ export const templateAPITypes = `/**
 
 /** TemplateProps is the root API for all template files. For example, you can access \`componentName\` by inserting {{componentName}} in a template file. */
 export type TemplateProps = {
- componentName: string;
- fragments: TemplateFragment[];
- query: string;
+  componentName: string;
+  fragments: TemplateFragment[];
+  query: TemplateQuery;
 };
 
 export type TemplateFragment = {
- name: string;
- propName: string;
- raw: string;
- selectionSet: string[];
+  name: string;
+  propName: string;
+  raw: string;
+  selectionSet: string[];
 };
 
 export type TemplateQuery = {
- raw: string;
- fragments: {
-   propName: string;
-   dataPath: string;
- }[];
+  raw: string;
+  fragments: {
+    propName: string;
+    dataPath: string;
+  }[];
 };
 `;
