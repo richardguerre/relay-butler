@@ -19,7 +19,7 @@ $ npm install -g relay-butler
 $ relay-butler COMMAND
 running command...
 $ relay-butler (-v|--version|version)
-relay-butler/0.0.5 darwin-x64 node-v12.22.0
+relay-butler/1.0.0 darwin-x64 node-v12.22.0
 $ relay-butler --help [COMMAND]
 USAGE
   $ relay-butler COMMAND
@@ -28,8 +28,23 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`relay-butler generate`](#relay-butler-generate)
 * [`relay-butler help [COMMAND]`](#relay-butler-help-command)
 * [`relay-butler init`](#relay-butler-init)
+
+## `relay-butler generate`
+
+generates component using GraphQL operations in input.graphql and template files in the templates directory.
+
+```
+USAGE
+  $ relay-butler generate
+
+OPTIONS
+  -h, --help  show help for generate command
+```
+
+_See code: [src/commands/generate.ts](https://github.com/richardguerre/relay-butler/blob/v1.0.0/src/commands/generate.ts)_
 
 ## `relay-butler help [COMMAND]`
 
@@ -61,5 +76,5 @@ OPTIONS
   -h, --help  show help for init command
 ```
 
-_See code: [src/commands/init.ts](https://github.com/richardguerre/relay-butler/blob/v0.0.5/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/richardguerre/relay-butler/blob/v1.0.0/src/commands/init.ts)_
 <!-- commandsstop -->
