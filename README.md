@@ -70,37 +70,33 @@ Templates in `.relay-butler/templates/` use handlebars as the templating languag
 ## Table of Contents
 
 <!-- toc -->
-
-- [relay-butler](#relay-butler)
-- [Usage](#usage)
-- [Commands](#commands)
+* [relay-butler](#relay-butler)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g relay-butler
 $ relay-butler COMMAND
 running command...
 $ relay-butler (-v|--version|version)
-relay-butler/1.0.2 darwin-x64 node-v12.22.0
+relay-butler/1.1.0 darwin-x64 node-v12.22.0
 $ relay-butler --help [COMMAND]
 USAGE
   $ relay-butler COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`relay-butler generate`](#relay-butler-generate)
-- [`relay-butler help [COMMAND]`](#relay-butler-help-command)
-- [`relay-butler init`](#relay-butler-init)
+* [`relay-butler generate`](#relay-butler-generate)
+* [`relay-butler help [COMMAND]`](#relay-butler-help-command)
+* [`relay-butler init`](#relay-butler-init)
 
 ## `relay-butler generate`
 
@@ -111,10 +107,11 @@ USAGE
   $ relay-butler generate
 
 OPTIONS
-  -h, --help  show help for generate command
+  -F, --force  forcily overwrite existing files
+  -h, --help   show help for generate command
 ```
 
-_See code: [src/commands/generate.ts](https://github.com/richardguerre/relay-butler/blob/v1.0.2/src/commands/generate.ts)_
+_See code: [src/commands/generate.ts](https://github.com/richardguerre/relay-butler/blob/v1.1.0/src/commands/generate.ts)_
 
 ## `relay-butler help [COMMAND]`
 
@@ -135,7 +132,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2
 
 ## `relay-butler init`
 
-sets up relay-butler by creating config.js, templates/\*.hbs files, input.graphql in .relay-butler/ directory.
+sets up relay-butler by creating config.js, templates/*.hbs files, input.graphql in .relay-butler/ directory.
 
 ```
 USAGE
@@ -147,6 +144,5 @@ OPTIONS
   --storybook  generate storybook template
 ```
 
-_See code: [src/commands/init.ts](https://github.com/richardguerre/relay-butler/blob/v1.0.2/src/commands/init.ts)_
-
+_See code: [src/commands/init.ts](https://github.com/richardguerre/relay-butler/blob/v1.1.0/src/commands/init.ts)_
 <!-- commandsstop -->
