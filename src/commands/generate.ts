@@ -14,9 +14,14 @@ export default class Generate extends Command {
   static flags = {
     help: flags.help({ char: 'h', description: 'show help for generate command' }),
     // TODO: add force/overwrite flag that will overwrite any files with the same file name.
+    force: flags.boolean({
+      char: 'F',
+      description: 'forcily overwrite existing files',
+    }),
   };
 
   async run() {
+    const { flags } = this.parse(Generate);
     cli.action.start('Initializing generator');
     if (!isRunningInRoot()) {
       this.error('Cannot run relay-butler outside of project root (i.e. directory where package.json is located)');
@@ -207,7 +212,7 @@ Naming convention to follow <ComponentName>_<propName>.
 
     cli.action.stop(logSymbols.success);
 
-    // TODO: traverse components array and create each file using templates
+    // traverse components array and create each file using templates
     for (const component of components) {
       this.log(`${logSymbols.info} Creating ${component.componentName}`);
 
@@ -245,7 +250,7 @@ Naming convention to follow <ComponentName>_<propName>.
         cli.action.start(`\tCreating ${fileName}`);
         const fileContent = template.fileContentCompiler(templateProps);
         const filePath = path.resolve(componentPath, `./${fileName}`);
-        if (fs.existsSync(filePath)) {
+        if (!flags.force && fs.existsSync(filePath)) {
           cli.action.stop(`skipped as it already exists.`);
           continue;
         }
