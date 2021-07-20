@@ -130,7 +130,7 @@ export default class Generate extends Command {
         return createFragmentQuery(
           parentType.typeName,
           propName,
-          `${path === '' ? `${propName}: ` : ''} {\n${partialQuery}\n}`,
+          `${path === '' ? `${propName}: ` : ''}${parentType.path} {\n${partialQuery}\n}`,
           `${path === '' ? propName : parentType.path}${path === '' ? '' : `.${path}`}`
         );
       }
