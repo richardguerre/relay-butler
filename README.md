@@ -44,15 +44,19 @@ Then you can just run `npm run relay-butler` or `yarn relay-butler`.
 
 ### Use Storybook with [`use-relay-mock-environment`](https://www.npmjs.com/package/use-relay-mock-environment)
 
-If you want to create stories out of your Relay components, we recommend using [`use-relay-mock-environment`](https://www.npmjs.com/package/use-relay-mock-environment).
+If you want to create Storybook stories out of your Relay components, we recommend using [`use-relay-mock-environment`](https://www.npmjs.com/package/use-relay-mock-environment), and adding it directly within your storybook template.
 
-If you have set up Storybook before setting up relay-butler, `relay-butler init` will detect that and will automatically create a `.stories.tsx` template with . All you need to do is install `use-relay-mock-environment` and change the path to your `useRelayMockEnvironment` hook.
+If you have set up Storybook before setting up relay-butler, `relay-butler init` will detect Storybook and will automatically create a `{{componentName}}.stories.tsx.hbs` template with Storybook stories and `use-relay-mock-environment`. After which, all you need to do is install `use-relay-mock-environment` and change the path to your `useRelayMockEnvironment` hook in the template.
 
-You can manually create the relay-butler `.stories.tsx` template by running:
+Alternatively, you can manually create the `{{componentName}}.stories.tsx.hbs` template by running:
 
 ```
 relay-butler init --storybook
 ```
+
+### Adding/removing/customizing templates
+
+By default, running `relay-butler init`, provides you with at least 3 templates, but you are free to add/remove templates and change their content. You can, for example, create a template for your CSS styles. You can even change the file name of the template, like changing the file extension to `.ts` instead of `.tsx`.
 
 ## Templates
 
@@ -60,18 +64,22 @@ Templates in `.relay-butler/templates/` use handlebars as the templating languag
 
 - Both the file name and file content are templatable, and have access to the same handlebars context.
 - You can refer to `.relay-butler/templateAPI.ts` for the full handlebars context.
+- You can add or remove templates
+- The handlebars file extension of templates (i.e. `.hbs`) is removed when generating your components, but you are free to remove it from the template itself. The `.hbs` extension is only used for code editors, like VS Code, to recognize that its a handlebars file and give you syntax highlighting for that.
 
 ## Table of Contents
 
 <!-- toc -->
-* [relay-butler](#relay-butler)
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [relay-butler](#relay-butler)
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
+
 ```sh-session
 $ npm install -g relay-butler
 $ relay-butler COMMAND
@@ -83,14 +91,16 @@ USAGE
   $ relay-butler COMMAND
 ...
 ```
+
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-* [`relay-butler generate`](#relay-butler-generate)
-* [`relay-butler help [COMMAND]`](#relay-butler-help-command)
-* [`relay-butler init`](#relay-butler-init)
+
+- [`relay-butler generate`](#relay-butler-generate)
+- [`relay-butler help [COMMAND]`](#relay-butler-help-command)
+- [`relay-butler init`](#relay-butler-init)
 
 ## `relay-butler generate`
 
@@ -125,7 +135,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2
 
 ## `relay-butler init`
 
-sets up relay-butler by creating config.js, templates/*.hbs files, input.graphql in .relay-butler/ directory.
+sets up relay-butler by creating config.js, templates/\*.hbs files, input.graphql in .relay-butler/ directory.
 
 ```
 USAGE
@@ -138,4 +148,5 @@ OPTIONS
 ```
 
 _See code: [src/commands/init.ts](https://github.com/richardguerre/relay-butler/blob/v1.0.2/src/commands/init.ts)_
+
 <!-- commandsstop -->
