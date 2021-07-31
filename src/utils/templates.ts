@@ -15,7 +15,7 @@ const {{componentName}}Container = (props: Props) => {
   {{#each fragments}}
   const {{this.propName}} = useFragment(
     graphql\`
-      {{this.raw}}
+      {{{this.raw}}}
     \`,
     props.{{this.propName}}
   );
@@ -47,7 +47,7 @@ export type {{componentName}}Props = {
    */
 }
 
-type Props = {
+type Props = {{componentName}}Props & {
   {{#each fragments}}
   {{this.propName}}: {{this.name}};
   {{/each}}
@@ -87,14 +87,18 @@ import {
   usePreloadedQuery,
   useQueryLoader
 } from 'react-relay';
-import { {{componentName}}Query as {{componentName}}QueryType } from '__generated__/{{componentName}}Query.graphql';
-import {{componentName}}, { {{componentName}}Loader } from '.';
+import { {{componentName}}Query as {{componentName}}QueryType, {{componentName}}QueryVariables } from '__generated__/{{componentName}}Query.graphql';
+import {{componentName}}, { {{componentName}}Props, {{componentName}}Loader } from '.';
 
 const query = graphql\`
   {{{query.raw}}}
 \`;
 
-type QueryProps = {
+export type {{componentName}}QueryProps = {{componentName}}Props & {{componentName}}QueryVariables & {
+  // add any other props the query component might need
+};
+
+type QueryProps = {{componentName}}QueryProps & {
   queryRef: PreloadedQuery<{{componentName}}QueryType>;
 };
 
@@ -139,24 +143,32 @@ export const storiesTemplate = `import React from 'react';
 import { RelayEnvironmentProvider } from 'react-relay';
 import { Meta } from '@storybook/react';
 import { useRelayMockEnvironment } from 'path/to/useRelayMockEnvironment';
+import { RelayMockData } from 'use-relay-mock-environment';
 import {{componentName}} from './{{componentName}}Query';
 
 export default {
   title: '{{componentName}}',
   component: {{componentName}},
   excludeStories: ['{{componentName}}MockDefaultOverrides'],
+  parameters: {
+    docs: {
+      description: {
+        component: 'This is a Relay component. To use it you will have to spread the fragment(s) {{#each fragments}}\`{{this.name}}\`{{#unless @last}},{{/unless}}{{/each}}.',
+      },
+    },
+  },
 } as Meta;
 
-export const {{componentName}}MockDefaultOverrides = {
+export const {{componentName}}Mock = {
   /**
-   * Add any mock default overrides here to be shared with stories of parent components.
+   * Add any mock overrides here to be shared with stories of parent components.
    * For example, a ListItem component might share its mock defaults with the List component stories.
    */
-};
+} as RelayMockData;
 
 export const Default = () => {
   const environment = useRelayMockEnvironment({
-    data: {{componentName}}MockDefaultOverrides,
+    data: {{componentName}}Mock,
   });
 
   return (
@@ -177,13 +189,18 @@ export const Loading = () => {
     </RelayEnvironmentProvider>
   );
 };
+Loading.parameters = {
+  chromatic: { disableSnapshot: true },
+};
 `;
 
 export const templateAPITypes = `/**
 * This file shows all available Handlebar expressions in template files.
 */
 
-/** TemplateProps is the root API for all template files. For example, you can access \`componentName\` by inserting {{componentName}} in a template file. */
+/**
+ * TemplateProps is the root API for all template files. For example, you can access \`componentName\` by inserting {{componentName}} in a template file.
+ */
 export type TemplateProps = {
   componentName: string;
   fragments: TemplateFragment[];
