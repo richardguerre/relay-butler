@@ -287,7 +287,7 @@ $ npm install -g relay-butler
 $ relay-butler COMMAND
 running command...
 $ relay-butler (-v|--version|version)
-relay-butler/1.1.4 darwin-x64 node-v14.17.1
+relay-butler/1.1.5 darwin-x64 node-v14.17.1
 $ relay-butler --help [COMMAND]
 USAGE
   $ relay-butler COMMAND
@@ -315,7 +315,7 @@ OPTIONS
   -h, --help   show help for generate command
 ```
 
-_See code: [src/commands/generate.ts](https://github.com/richardguerre/relay-butler/blob/v1.1.4/src/commands/generate.ts)_
+_See code: [src/commands/generate.ts](https://github.com/richardguerre/relay-butler/blob/v1.1.5/src/commands/generate.ts)_
 
 ## `relay-butler help [COMMAND]`
 
@@ -348,5 +348,5 @@ OPTIONS
   --storybook  generate storybook template
 ```
 
-_See code: [src/commands/init.ts](https://github.com/richardguerre/relay-butler/blob/v1.1.4/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/richardguerre/relay-butler/blob/v1.1.5/src/commands/init.ts)_
 <!-- commandsstop -->
