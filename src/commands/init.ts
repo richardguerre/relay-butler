@@ -60,6 +60,7 @@ export default class Init extends Command {
     const configToWrite: Config = {
       componentsDirectory: './src/components',
       nodeTypeName: 'Node',
+      templatesDirectory: './.relay-butler/templates',
       schema: relayConfig?.schema ?? 'ADD SCHEMA PATH HERE',
     };
     cli.action.start('Creating config.js');
