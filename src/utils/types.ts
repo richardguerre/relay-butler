@@ -2,6 +2,7 @@ export type Config = {
   // relay-butler specific
   componentsDirectory: string;
   nodeTypeName?: string;
+  templatesDirectory?: string;
 
   // relay.config.js specific
   schema: string;

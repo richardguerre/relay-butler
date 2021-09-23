@@ -28,24 +28,25 @@ export default class Generate extends Command {
     }
     const root = process.cwd();
     const relayButlerDir = path.resolve(root, './.relay-butler');
-    const relayButlerTemplatesDir = path.resolve(relayButlerDir, './templates');
     const configPath = path.resolve(relayButlerDir, './config.js');
     const inputPath = path.resolve(relayButlerDir, './input.graphql');
 
     // check that config.js exists and extract it into config
     let config: Config | null = null;
-    try {
-      config = require(configPath);
-    } catch (err) {
-      if (err.code === 'MODULE_NOT_FOUND') {
-        this.error('Could not find .relay-butler/config.js. Run `relay-butler init` to set up relay-butler.', err);
-        return;
-      }
-      this.error(err);
+    if (fs.existsSync(configPath)) {
+      const configRaw = await fs.promises.readFile(configPath, { encoding: 'utf8' });
+      config = JSON.parse(configRaw);
+    } else {
+      this.error('Could not find .relay-butler/config.js. Run `relay-butler init` to set up relay-butler.');
     }
     if (!config) {
       this.error('Error parsing config.js. Make sure its content is correct, and correctly exported.');
     }
+
+    // get path of templatesDirectory from config, else use default
+    const relayButlerTemplatesDir = config.templatesDirectory
+      ? path.resolve(root, config.templatesDirectory)
+      : path.resolve(relayButlerDir, './templates');
 
     const templatesInDir = await fs.promises.readdir(relayButlerTemplatesDir);
     if (templatesInDir.length === 0) {
